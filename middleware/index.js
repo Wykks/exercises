@@ -9,16 +9,13 @@ var Middleware  = (function() {
     };
     
     Middleware.prototype.go = function(fn) {
-        if (!funcs.length) {
-            fn.call(this);
-            return;
-        }
-        funcs[0].call(this, sub(this, 1));
-
-        function sub(self, index) {
+        var index = 0;
+        var self = this;
+        sub();
+        function sub() {
             if (index >= funcs.length)
-                return fn.bind(self);
-            return funcs[index].bind(self, sub(self, index + 1));
+                return fn.call(self);
+            funcs[index++].call(self, sub);
         }
     };
     
